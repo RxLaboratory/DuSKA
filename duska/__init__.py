@@ -40,6 +40,25 @@ def is_shape_keyable(obj):
     if obj is None: return False
     return obj.type == 'CURVE' or obj.type == 'MESH'
 
+def set_ska(shape_keys, index):
+    for i, sk in enumerate(shape_keys):
+        if not is_ska_key(sk): continue
+        if i == index:
+            sk.value = 1
+            return
+        else: sk.value = 0
+
+def set_ska_values(shape_keys, indices, values):
+    for i, index in enumerate(indices):
+        sk = shape_keys[index]
+        if not is_ska_key(sk): continue
+        sk.value = values[i]
+
+    for i, sk in enumerate(shape_keys):
+        if not is_ska_key(sk): continue
+        if not i in indices:
+            sk.value = 0
+
 def update_ska_index(obj, context=bpy.context):
     """Updates the index of the Shape Key Animator"""
     if not is_shape_keyable(obj): return
@@ -48,10 +67,36 @@ def update_ska_index(obj, context=bpy.context):
 
     shape_keys = obj.data.shape_keys.key_blocks
     
-    for i, sk in enumerate(shape_keys):
-        if not is_ska_key(sk): continue
-        if i == current_key: sk.value = 1
-        else: sk.value = 0
+    # check if the index is animated, if so interpolate
+    anim_data = obj.animation_data
+    if anim_data is not None:
+        for fcurve in anim_data.action.fcurves:
+            if fcurve.data_path == 'ska_active_index':
+                frame = context.scene.frame_current
+                # find keyframes
+                keyframes = fcurve.keyframe_points
+                # Juste one keyframe
+                if len(keyframes) < 2:
+                    set_ska(shape_keys, current_key)
+                    return
+                # Check if key at current frame
+                current_key = dublf.animation.get_keyframe_at_frame(fcurve, frame)
+                if current_key is not None:
+                    set_ska(shape_keys, current_key)
+                    return
+                # Else, get the previous one
+                prev_key = dublf.animation.get_previous_keyframe(fcurve, frame)
+                if prev_key.interpolation == 'CONSTANT':
+                    set_ska(shape_keys, prev_key.co[1])
+                    return
+                # Interpolate TODO Not Working
+                next_key = dublf.animation.get_next_keyframe(fcurve, frame)
+                t = frame - prev_key.co[0]
+                d = next_key.co[1] - prev_key.co[0]
+                ratio = t / d
+                set_ska_values(shape_keys, [ int(prev_key.co[1]), int(next_key.co[1]) ], [ ratio, 1/ratio ])
+    else:
+        set_ska(shape_keys, current_key)
 
 def is_ska_key( shapeKey ):
     return 'SKA.'in shapeKey.name
@@ -68,6 +113,8 @@ class DUSKA_OT_add_key( bpy.types.Operator ):
     bl_description = "Adds a new Shape Key to be used in the animation"
     bl_options = {'REGISTER','UNDO'}
 
+    from_mix: bpy.props.BoolProperty(default=False)
+
     @classmethod
     def poll(cls, context):
         obj = context.object
@@ -76,7 +123,7 @@ class DUSKA_OT_add_key( bpy.types.Operator ):
     def execute(self, context):
         obj = context.object
         # Add a new key
-        sk = obj.shape_key_add(name='SKA.Key', from_mix=False)
+        sk = obj.shape_key_add(name='SKA.Key', from_mix=self.from_mix)
         num_keys = len(obj.data.shape_keys.key_blocks)
         if num_keys == 1:
             sk.name = 'Basis'
@@ -142,6 +189,7 @@ class DUSKA_PT_keys_control( bpy.types.Panel ):
             row.template_list("DUSKA_UL_keys", "", key , "key_blocks", obj , "ska_active_index" , rows = 3 )
             col = row.column(align=True)
             col.operator("object.ska_add_key", icon='ADD', text="")
+            col.operator("object.ska_add_key", icon='PLUS', text="").from_mix = True
             col.operator("object.ska_remove_key", icon='REMOVE', text="")
         
 classes = (
