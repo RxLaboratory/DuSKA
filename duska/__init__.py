@@ -23,7 +23,7 @@ bl_info = {
     "blender": (2, 80, 0),
     "author": "Nicolas 'Duduf' Dufresne",
     "location": "3D View > Sidebar > Item",
-    "version": (0,0,1),
+    "version": (1,0,0),
     "description": "Eases animation using shape keys (clay animation) and corrective shape keys.",
     "wiki_url": "https://duska-docs.rainboxlab.org/",
 }
@@ -56,8 +56,8 @@ def set_ska_values(shape_keys, indices, values):
 
     for i, sk in enumerate(shape_keys):
         if not is_ska_key(sk): continue
-        if not i in indices:
-            sk.value = 0
+        if i in indices: continue
+        sk.value = 0
 
 def update_ska_index(obj, context=bpy.context):
     """Updates the index of the Shape Key Animator"""
@@ -68,9 +68,8 @@ def update_ska_index(obj, context=bpy.context):
     shape_keys = obj.data.shape_keys.key_blocks
     
     # check if the index is animated, if so interpolate
-    anim_data = obj.animation_data
-    if anim_data is not None:
-        for fcurve in anim_data.action.fcurves:
+    if dublf.animation.is_animated(obj):
+        for fcurve in obj.animation_data.action.fcurves:
             if fcurve.data_path == 'ska_active_index':
                 frame = context.scene.frame_current
                 # find keyframes
@@ -79,24 +78,37 @@ def update_ska_index(obj, context=bpy.context):
                 if len(keyframes) < 2:
                     set_ska(shape_keys, current_key)
                     return
-                # Check if key at current frame
-                current_key = dublf.animation.get_keyframe_at_frame(fcurve, frame)
-                if current_key is not None:
+                # Get the previous key
+                prev_key = dublf.animation.get_previous_keyframe(fcurve, frame)
+                if prev_key is None:
                     set_ska(shape_keys, current_key)
                     return
-                # Else, get the previous one
-                prev_key = dublf.animation.get_previous_keyframe(fcurve, frame)
+                prev_key_time = prev_key.co[0]
+                prev_key_value = prev_key.co[1]
                 if prev_key.interpolation == 'CONSTANT':
                     set_ska(shape_keys, prev_key.co[1])
                     return
-                # Interpolate TODO Not Working
+                # Interpolate
                 next_key = dublf.animation.get_next_keyframe(fcurve, frame)
-                t = frame - prev_key.co[0]
-                d = next_key.co[1] - prev_key.co[0]
-                ratio = t / d
-                set_ska_values(shape_keys, [ int(prev_key.co[1]), int(next_key.co[1]) ], [ ratio, 1/ratio ])
+                if next_key is None:
+                    set_ska(shape_keys, prev_key.co[1])
+                    return
+                next_key_time = next_key.co[0]
+                next_key_value = next_key.co[1]
+                t = frame - prev_key_time
+                d = next_key_time - prev_key_time
+                if d == 0:
+                    ratio = 1
+                else:
+                    ratio = t / d
+                set_ska_values(shape_keys, [ int(prev_key_value), int(next_key_value) ], [ 1-ratio, ratio ])
     else:
         set_ska(shape_keys, current_key)
+        
+def view_ska_index(obj, context):
+    if not is_shape_keyable(obj): return
+    current_key = obj.ska_active_index
+    set_ska(obj.data.shape_keys.key_blocks, current_key)
 
 def is_ska_key( shapeKey ):
     return 'SKA.'in shapeKey.name
@@ -105,7 +117,7 @@ def is_ska_key( shapeKey ):
 def update_keys_handler( scene ):
     """Updates all keys"""
     for obj in bpy.data.objects:
-        update_ska_index(obj)
+        update_ska_index(obj, bpy.context)
 
 class DUSKA_OT_add_key( bpy.types.Operator ):
     bl_idname = "object.ska_add_key"
@@ -209,7 +221,7 @@ def register():
         bpy.utils.register_class(cls)
 
     if not hasattr( bpy.types.Object, 'ska_active_index' ):
-        bpy.types.Object.ska_active_index = bpy.props.IntProperty( default=-1, update=update_ska_index, options={'ANIMATABLE','LIBRARY_EDITABLE'} )
+        bpy.types.Object.ska_active_index = bpy.props.IntProperty( default=-1, update=view_ska_index, options={'ANIMATABLE','LIBRARY_EDITABLE'} )
 
     # Add handler
     dublf.handlers.frame_change_pre_append( update_keys_handler )
