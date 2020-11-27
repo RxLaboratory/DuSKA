@@ -8,7 +8,6 @@ dupyf_path=../../../DuPYF/DuPYF/dupyf/
 
 duska_path=$(cd "$duska_path"; pwd)
 dublf_path=$(cd "$dublf_path"; pwd)
-dupyf_path=$(cd "$dupyf_path"; pwd)
 
 rm -r -f "$addons_path/duska"
 mkdir "$addons_path/duska"
@@ -20,6 +19,4 @@ done
 
 ln -s -t "$addons_path/duska" "$dublf_path"
 echo "Linked DuBLF"
-ln -s -t "$addons_path/duska" "$dupyf_path"
-echo "Linked DuPYF"
 echo "Done!"

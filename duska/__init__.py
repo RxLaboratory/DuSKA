@@ -22,7 +22,7 @@ bl_info = {
     "category": "Animation",
     "blender": (2, 80, 0),
     "author": "Nicolas 'Duduf' Dufresne",
-    "location": "3D View > Sidebar > Item",
+    "location": "3D View ▸ Sidebar ▸ Item",
     "version": (1,0,0),
     "description": "Eases animation using shape keys (clay animation) and corrective shape keys.",
     "wiki_url": "https://duska-docs.rainboxlab.org/",
@@ -181,7 +181,7 @@ class DUSKA_UL_keys( bpy.types.UIList ):
 class DUSKA_PT_keys_control( bpy.types.Panel ):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_label = "Shape Keys animation"
+    bl_label = "Shape Keys Animation"
     bl_idname = "DUSKA_PT_keys_controls"
     bl_category = 'Item'
 

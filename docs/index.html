@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="The DuSKA comprehensive documentation">
+  <meta name="author" content="Nicolas Dufresne and contributors">
+  <link rel="shortcut icon" href="img/favicon.ico">
+  <title>DuSKA - DuSKA Documentation</title>
+  <link rel="stylesheet" href="css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link href="style.css" rel="stylesheet">
+  <link href="video.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "DuSKA";
+    var mkdocs_page_input_path = "index.md";
+    var mkdocs_page_url = "/";
+  </script>
+  
+  <script src="js/jquery-2.1.1.min.js" defer></script>
+  <script src="js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="." class="icon icon-home"> DuSKA Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href=".">DuSKA</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#duska-duduf-shape-keys-animator">DuSKA - Duduf Shape Keys Animator</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#installation">Installation</a></li>
+        
+            <li><a class="toctree-l3" href="#use">Use</a></li>
+        
+            <li><a class="toctree-l3" href="#license">License</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="changelog/">Changelog</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">License</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="licenses/gnu-gpl/">GNU GPLv3</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="licenses/gfdl/">Documentation license</a>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href=".">DuSKA Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>DuSKA</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/Rainbox-dev/DuBLF_DuSKA/edit/master/src-docs/docs/index.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="duska-duduf-shape-keys-animator">DuSKA - Duduf Shape Keys Animator</h1>
+<p>DuSKA is an add-on for <a href="http://blender.org"><em>Blender</em></a> to help with animation of shape keys.</p>
+<p>It is very useful for:</p>
+<ul>
+<li>Fake Stop-Motion/<em>Claymation</em>.</li>
+<li>Post-Animation corrective <em>Shape Keys</em> with rigged characters.</li>
+</ul>
+<p>Without this add-on, to animate <em>Shape Keys</em> in Blender, you&rsquo;d have to animate all of their values between 0 and 1, taking care of the mix between them if you&rsquo;d like to interpolate. <em>DuSKA</em> provides a very simple animatable list with the <em>Shape Keys</em> where you can just select the keys to activate them; <em>DuSKA</em> takes care of the values and interpolations for you.</p>
+<div class="toc">
+<ul>
+<li><a href="#duska-duduf-shape-keys-animator">DuSKA - Duduf Shape Keys Animator</a><ul>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#use">Use</a></li>
+<li><a href="#license">License</a><ul>
+<li><a href="#software">Software</a></li>
+<li><a href="#this-documentation">This Documentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="installation">Installation</h2>
+<p><em>DuSKA</em> is installed as any other add-on in <em>Blender</em>: in <code>Preferences ▸ Add-ons</code>, choose <em>install</em> and select the <em>DuSKA</em> <em>.zip</em> archive. Don&rsquo;t forget to enable the add-on once installed.</p>
+<h2 id="use">Use</h2>
+<p><code>3D View ▸ Sidebar ▸ Item tab ▸ Shape Keys Animation</code></p>
+<p><img alt="" src="img/captures/duska-panel.png" /></p>
+<p>When a compatible object is selected (<em>Curve</em> or <em>Mesh</em>), you can add new Shape Keys with the <em>Shape Keys Animation</em> panel.</p>
+<ul>
+<li><strong>+</strong> <em>Add Key</em> adds a new Keyframe from the basis.</li>
+<li><strong>⊕</strong> <em>Add Key from mix</em> adds a new Keyframe from the current mix.</li>
+<li><strong>-</strong> <em>Remove Key</em> removes the selected <em>SKA</em> key.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p><em>DuSKA</em> controls and animates only the <em>Shape Keys</em> which name starts with <code>SKA.</code>. To convert existing <em>Shape Keys</em> to/from animated <em>Shape Keys</em>, just rename them.<br />
+Other <em>Shape Keys</em> (included the basis) will be listed as <em>Not animatable</em>.</p>
+</div>
+<p>This list of <em>Shape Keys</em> can be animated, as any other property; you can also add a driver to control it.</p>
+<p>When the keyframes are set to <em>Constant</em> interpolation, there will be no transition between keys, which is better for <em>claymation</em>. When set to <em>Linear</em> interpolation (the default), <em>DuSKA</em> will interpolate between keys, which may be better for corrective <em>Shape Keys</em>.</p>
+<h2 id="license">License</h2>
+<h3 id="software">Software</h3>
+<p>The software this documentation is referring to is licensed under the <strong><em>GNU General Public License</em></strong>.</p>
+<p><span style="font-size:0.75em;"><strong>Copyright (C)  2020 Nicolas Dufresne and Contributors.</strong><br />
+This program is free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.</span></p>
+<p><span style="font-size:0.75em;">This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</span></p>
+<p><span style="font-size:0.75em;">You should have received a copy of the <em>GNU General Public License</em> along with this program . If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</span></p>
+<p><img alt="GNU" src="img/licenses/gnu.png" style="height:75px;" /> <img alt="GPL3" src="img/licenses/gplv3.png" style="height:50px;" /></p>
+<h3 id="this-documentation">This Documentation</h3>
+<p><span style="font-size:0.75em;"><strong>Copyright (C)  2020 Nicolas Dufresne and Contributors.</strong><br />
+Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.3 or any later version published by the Free Software Foundation;<br />
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+A copy of the license is included in the section entitled &ldquo;<a href="licenses/gfdl/">Documentation License</a>&rdquo;.</span></p>
+<p><img alt="GNU" src="img/licenses/gnu.png" style="height:75px;" /> <img alt="GFDL" src="img/licenses/gfdl-logo.png" style="height:50px;" /></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="changelog/" class="btn btn-neutral float-right" title="Changelog">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>Copyright © 2020 <a href="https://rainboxlagb.org">Rainbox Laboratory</a> and <a href="https://duduf.com">Nicolas Dufresne</a></p>
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/Rainbox-dev/DuBLF_DuSKA/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+      
+        <span style="margin-left: 15px"><a href="changelog/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme.js" defer></script>
+      <script src="video.js" defer></script>
+      <script src="search/main.js" defer></script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.0.4
+Build Date UTC : 2020-11-27 11:40:43
+-->

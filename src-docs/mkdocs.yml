@@ -1,0 +1,32 @@
+site_name: DuSKA Documentation
+site_url: https://rainboxlab.org
+repo_url: https://github.com/Rainbox-dev/DuBLF_DuSKA
+edit_uri: edit/master/src-docs/docs/
+site_description: The DuSKA comprehensive documentation
+site_author: Nicolas Dufresne and contributors
+copyright: 'Copyright © 2020 <a href="https://rainboxlagb.org">Rainbox Laboratory</a> and <a href="https://duduf.com">Nicolas Dufresne</a>'
+theme:
+    name: readthedocs
+    custom_dir: theme/
+markdown_extensions:
+    - smarty
+    - footnotes
+    - tables
+    - admonition
+    - codehilite
+    - fenced_code
+    - toc
+    - attr_list
+extra_css:
+    - style.css
+    - video.css
+extra_javascript:
+    - video.js
+site_dir: ../docs/
+dev_addr: '127.0.0.1:8001'
+nav:
+    - DuSKA: index.md
+    - Changelog: changelog.md
+    - License:
+        - GNU GPLv3: licenses/gnu-gpl.md
+        - Documentation license: licenses/gfdl.md
