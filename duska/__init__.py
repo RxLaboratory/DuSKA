@@ -29,12 +29,9 @@ bl_info = {
 }
 
 import bpy # pylint: disable=import-error
-import importlib
 from bpy.app.handlers import persistent # pylint: disable=import-error
 
-from . import (
-    dublf,
-)
+from .dublf import handlers as dublf_handlers # pylint: disable=import-error
 
 def is_shape_keyable(obj):
     if obj is None: return False
@@ -313,10 +310,6 @@ classes = (
 )
 
 def register():
-    importlib.reload(dublf)
-    importlib.reload(dublf.rigging)
-    importlib.reload(dublf.shapeKeys)
-
     # register
     for cls in classes:
         bpy.utils.register_class(cls)
@@ -327,11 +320,11 @@ def register():
         bpy.types.Object.ska_keys = bpy.props.CollectionProperty( type=DUSKA_key )
 
     # Add handler
-    dublf.handlers.frame_change_pre_append( update_keys_handler )
+    dublf_handlers.frame_change_pre_append( update_keys_handler )
     
 def unregister():
     # Remove handler
-    dublf.handlers.frame_change_pre_remove( update_keys_handler )
+    dublf_handlers.frame_change_pre_remove( update_keys_handler )
 
     del bpy.types.Object.ska_keys
     del bpy.types.Object.ska_active_index
