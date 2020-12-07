@@ -32,6 +32,7 @@ import bpy # pylint: disable=import-error
 from bpy.app.handlers import persistent # pylint: disable=import-error
 
 from .dublf import handlers as dublf_handlers # pylint: disable=import-error
+from .dublf import animation as dublf_animation # pylint: disable=import-error
 
 def is_shape_keyable(obj):
     if obj is None: return False
@@ -86,40 +87,40 @@ def update_ska_index(obj, context=bpy.context):
     current_ska = obj.ska_keys[active_index]
     
     # check if the index is animated, if so interpolate
-    if dublf.animation.is_animated(obj):
-        for fcurve in obj.animation_data.action.fcurves:
-            if fcurve.data_path == 'ska_active_index':
-                frame = context.scene.frame_current
-                # find keyframes
-                keyframes = fcurve.keyframe_points
-                # Juste one keyframe
-                if len(keyframes) < 2:
-                    set_shape_key(obj, current_ska)
-                    return
-                # Get the previous key
-                prev_key = dublf.animation.get_previous_keyframe(fcurve, frame)
-                if prev_key is None:
-                    set_shape_key(obj, current_ska)
-                    return
-                prev_key_time = prev_key.co[0]
-                prev_key_value = obj.ska_keys[int(prev_key.co[1])]
-                if prev_key.interpolation == 'CONSTANT':
-                    set_shape_key(obj, prev_key.co[1])
-                    return
-                # Interpolate
-                next_key = dublf.animation.get_next_keyframe(fcurve, frame)
-                if next_key is None:
-                    set_shape_key(obj, prev_key_value)
-                    return
-                next_key_time = next_key.co[0]
-                next_key_value = obj.ska_keys[int(next_key.co[1])]
-                t = frame - prev_key_time
-                d = next_key_time - prev_key_time
-                if d == 0:
-                    ratio = 1
-                else:
-                    ratio = t / d
-                set_ska_values(obj, [ prev_key_value, next_key_value ], [ 1-ratio, ratio ])
+    if dublf_animation.is_animated(obj):
+        curves = dublf_animation.get_curves(obj, 'ska_active_index')
+        for fcurve in curves:
+            frame = context.scene.frame_current
+            # find keyframes
+            keyframes = fcurve.keyframe_points
+            # Juste one keyframe
+            if len(keyframes) < 2:
+                set_shape_key(obj, current_ska)
+                return
+            # Get the previous key
+            prev_key = dublf_animation.get_previous_keyframe(fcurve, frame)
+            if prev_key is None:
+                set_shape_key(obj, current_ska)
+                return
+            prev_key_time = prev_key.co[0]
+            prev_key_value = obj.ska_keys[int(prev_key.co[1])]
+            if prev_key.interpolation == 'CONSTANT':
+                set_shape_key(obj, prev_key.co[1])
+                return
+            # Interpolate
+            next_key = dublf_animation.get_next_keyframe(fcurve, frame)
+            if next_key is None:
+                set_shape_key(obj, prev_key_value)
+                return
+            next_key_time = next_key.co[0]
+            next_key_value = obj.ska_keys[int(next_key.co[1])]
+            t = frame - prev_key_time
+            d = next_key_time - prev_key_time
+            if d == 0:
+                ratio = 1
+            else:
+                ratio = t / d
+            set_ska_values(obj, [ prev_key_value, next_key_value ], [ 1-ratio, ratio ])
     else:
         set_shape_key(obj, current_ska)
         
@@ -186,15 +187,25 @@ class DUSKA_OT_add_key( bpy.types.Operator ):
         ska = obj.ska_keys.add()
         ska.ska_name = sk.name
         num_keys = len(obj.data.shape_keys.key_blocks)
-        if num_keys == 1:
+        if num_keys == 1: # if it's the first, it's the basis
             sk.name = 'Basis'
             ska.ska_name = sk.name
             sk = obj.shape_key_add(name='SKA.Key', from_mix=False)
             ska = obj.ska_keys.add()
             ska.ska_name = sk.name
+        else: # let's check if the basis is there, if not add it
+            pass
         i = len(obj.data.shape_keys.key_blocks)-1
         obj.active_shape_key_index = i
         obj.ska_active_index = i
+
+        # If autokey is active and there are keyframes, add a keyframe
+        if context.tool_settings.use_keyframe_insert_auto:
+            curves = dublf_animation.get_curves(obj, 'ska_active_index')
+            for curve in curves:
+                keyframes = curve.keyframe_points
+                if len(keyframes) > 0:
+                    keyframes.insert(context.scene.frame_current, obj.ska_active_index)
         
         return {'FINISHED'}
 
@@ -218,7 +229,7 @@ class DUSKA_OT_remove_key(bpy.types.Operator ):
 
         # remove all keyframes referencing this ska
         # and adjust values of other keyframes to continue referencing the right skas
-        dublf.animation.remove_animated_index('ska_active_index', obj.ska_active_index)
+        dublf_animation.remove_animated_index(obj, 'ska_active_index', obj.ska_active_index)
 
         shape_key = get_shape_key(obj, obj.ska_keys[obj.ska_active_index])
         if shape_key is not None:
@@ -256,7 +267,7 @@ class DUIK_OT_move_ska( bpy.types.Operator ):
         else: new_index = current_index + 1
 
         # update keyframes values
-        dublf.animation.swap_animated_index('ska_active_index', current_index, new_index)
+        dublf_animation.swap_animated_index(obj, 'ska_active_index', current_index, new_index)
 
         skas.move(current_index, new_index)
         obj.ska_active_index = new_index
@@ -293,7 +304,7 @@ class DUSKA_PT_keys_control( bpy.types.Panel ):
             row = layout.row()
             row.template_list("DUSKA_UL_keys", "", obj , "ska_keys", obj , "ska_active_index" , rows = 3 )
             col = row.column(align=True)
-            col.operator("object.ska_add_key", icon='ADD', text="")
+            col.operator("object.ska_add_key", icon='ADD', text="").from_mix = False
             col.operator("object.ska_add_key", icon='PLUS', text="").from_mix = True
             col.operator("object.ska_remove_key", icon='REMOVE', text="")
             col.separator()

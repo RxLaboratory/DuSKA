@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.1
+
+### Fixes
+
+- When adding a new *SKA Key* and the auto keying is active, a keyframe is now added.
+- The *Add* button correctly adds *Ska Keys* from the basis instead of from mix.
+
 ## 1.0.0
 
 Initial release
