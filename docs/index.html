@@ -151,17 +151,26 @@
 <h2 id="use">Use</h2>
 <p><code>3D View ▸ Sidebar ▸ Item tab ▸ Shape Keys Animation</code></p>
 <p><img alt="" src="img/captures/duska-panel.png" /></p>
-<p>When a compatible object is selected (<em>Curve</em> or <em>Mesh</em>), you can add new Shape Keys with the <em>Shape Keys Animation</em> panel.</p>
+<p>When a compatible object is selected (<em>Curve</em> or <em>Mesh</em>), you can add new Animated Shape Keys with the <em>Shape Keys Animation</em> panel.</p>
 <ul>
-<li><strong>+</strong> <em>Add Key</em> adds a new Keyframe from the basis.</li>
-<li><strong>⊕</strong> <em>Add Key from mix</em> adds a new Keyframe from the current mix.</li>
-<li><strong>-</strong> <em>Remove Key</em> removes the selected <em>SKA</em> key.</li>
-<li>Use the <strong>▲ ▼</strong> <em>Move Key</em> buttons to re-arrange the <em>SKA</em> keys in the list.</li>
+<li><em>New Abnimated Key</em> adds a new Keyframe from the basis.</li>
+<li><em>Edit Animated Key</em> activates the <em>Shape Key</em> corresponding to the current <em>Animated Key</em> and switches to <em>Edit mode</em>.</li>
+<li><em>Edit Animated Key</em> activates the <em>Shape Key</em> corresponding to the current <em>Animated Key</em> and switches to <em>Sculpt mode</em>.</li>
+<li>Use the <strong>▲ ▼</strong> <em>Move Key</em> buttons to re-arrange the <em>Animated Keys</em> in the list.</li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><em>DuSKA</em>&lsquo;s list uses the displayed names to pick the right <em>Shape Keys</em> on the object. If a <em>SKA</em> key does not find its counterpart in the <em>Shape Keys</em> (because it has been removed or renamed), a warning sign will be shown. You can either safely remove it, or rename it to link it back to an existing <em>Shape Key</em>.</p>
 </div>
+<p>The menu <strong>▽</strong> contains other useful operators.</p>
+<p><img alt="" src="img/captures/duska-popup.png" /></p>
+<ul>
+<li><em>New Abnimated Key</em> adds a new Keyframe from the basis.</li>
+<li><em>New Abnimated Key from mix</em> adds a new Keyframe from the current Shape Key mix.</li>
+<li><em>Add active Shape Key to animation</em> adds the active <em>Shape Key</em> to the list of animated <em>Shape Keys</em>.</li>
+<li><em>Remove Animated Key from animation</em> removes the active <em>Animated Key</em> but does not delete the corresponding <em>Shape Key</em>.</li>
+<li><em>Delete Shape Key</em> removes the active <em>Animated Key</em> and deletes the corresponding <em>Shape Key</em>.</li>
+</ul>
 <p>This list of <em>Shape Keys</em> can be animated, as any other property; you can also add a driver to control it.</p>
 <p>When the keyframes are set to <em>Constant</em> interpolation, there will be no transition between keys, which is better for <em>claymation</em>. When set to <em>Linear</em> interpolation (the default), <em>DuSKA</em> will interpolate between keys, which may be better for corrective <em>Shape Keys</em>.</p>
 <h2 id="license">License</h2>
@@ -231,5 +240,5 @@ A copy of the license is included in the section entitled &ldquo;<a href="licens
 
 <!--
 MkDocs version : 1.0.4
-Build Date UTC : 2020-11-27 18:09:54
+Build Date UTC : 2020-12-07 12:10:57
 -->

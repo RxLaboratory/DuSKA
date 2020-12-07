@@ -1,6 +1,11 @@
 # Changelog
 
-## 1.0.1
+## 1.1.0
+
+### Improvements
+
+- UI improvements (added a menu and a few operators, changed the icon of the basis)
+- Added buttons to quickly edit animated keys.
 
 ### Fixes
 

@@ -22,8 +22,8 @@ bl_info = {
     "category": "Animation",
     "blender": (2, 80, 0),
     "author": "Nicolas 'Duduf' Dufresne",
-    "location": "3D View ▸ Sidebar ▸ Item",
-    "version": (1,0,0),
+    "location": "3D View > Sidebar > Item",
+    "version": (1,1,0),
     "description": "Eases animation using shape keys (clay animation) and corrective shape keys.",
     "wiki_url": "https://duska-docs.rainboxlab.org/",
 }

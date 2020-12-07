@@ -21,15 +21,25 @@ Without this add-on, to animate *Shape Keys* in Blender, you'd have to animate a
 
 ![](img/captures/duska-panel.png)
 
-When a compatible object is selected (*Curve* or *Mesh*), you can add new Shape Keys with the *Shape Keys Animation* panel.
+When a compatible object is selected (*Curve* or *Mesh*), you can add new Animated Shape Keys with the *Shape Keys Animation* panel.
 
-- **+** *Add Key* adds a new Keyframe from the basis.
-- **⊕** *Add Key from mix* adds a new Keyframe from the current mix.
-- **-** *Remove Key* removes the selected *SKA* key.
-- Use the **▲ ▼** *Move Key* buttons to re-arrange the *SKA* keys in the list.
+- *New Abnimated Key* adds a new Keyframe from the basis.
+- *Edit Animated Key* activates the *Shape Key* corresponding to the current *Animated Key* and switches to *Edit mode*.
+- *Edit Animated Key* activates the *Shape Key* corresponding to the current *Animated Key* and switches to *Sculpt mode*.
+- Use the **▲ ▼** *Move Key* buttons to re-arrange the *Animated Keys* in the list.
 
 !!! Note
     *DuSKA*'s list uses the displayed names to pick the right *Shape Keys* on the object. If a *SKA* key does not find its counterpart in the *Shape Keys* (because it has been removed or renamed), a warning sign will be shown. You can either safely remove it, or rename it to link it back to an existing *Shape Key*.
+
+The menu **▽** contains other useful operators.
+
+![](img/captures/duska-popup.png)
+
+- *New Abnimated Key* adds a new Keyframe from the basis.
+- *New Abnimated Key from mix* adds a new Keyframe from the current Shape Key mix.
+- *Add active Shape Key to animation* adds the active *Shape Key* to the list of animated *Shape Keys*.
+- *Remove Animated Key from animation* removes the active *Animated Key* but does not delete the corresponding *Shape Key*.
+- *Delete Shape Key* removes the active *Animated Key* and deletes the corresponding *Shape Key*.
 
 This list of *Shape Keys* can be animated, as any other property; you can also add a driver to control it.
 
