@@ -167,10 +167,71 @@ class DUSKA_key( bpy.types.PropertyGroup ):
     name: bpy.props.StringProperty( default="SKA.key", set=rename_ska, get=ska_name )
     ska_name:bpy.props.StringProperty()
 
+class DUSKA_OT_edit( bpy.types.Operator ):
+    bl_idname = "object.ska_edit_key"
+    bl_label = "Edit Animated Key"
+    bl_description = "Edits the selected Animated Key"
+    bl_options = {'REGISTER','UNDO'}
+
+    sculpt: bpy.props.BoolProperty(default=False)
+
+    @classmethod
+    def poll(cls, context):
+        obj = context.object
+        num_keys = len(obj.ska_keys)
+        if num_keys == 0: return False
+        if obj.ska_active_index < 0: return False
+        if obj.ska_active_index >= num_keys: return False
+        return True
+
+    def execute(self, context):
+        obj = context.object
+        current_ska_name = obj.ska_keys[obj.ska_active_index].name
+        ok = False
+        for i, s in enumerate(obj.data.shape_keys.key_blocks):
+            if s.name == current_ska_name:
+                obj.active_shape_key_index = i
+                ok = True
+                break
+        if ok:
+            if self.sculpt:
+                bpy.ops.object.mode_set(mode='SCULPT')
+            else:
+                bpy.ops.object.mode_set(mode='EDIT')
+
+        return {'FINISHED'}
+
+class DUSKA_OT_include_key( bpy.types.Operator ):
+    bl_idname = "object.ska_include_key"
+    bl_label = "Add Key to animation"
+    bl_description = "Includes a new Shape Key to be used in the animation"
+    bl_options = {'REGISTER','UNDO'}
+
+    @classmethod
+    def poll(cls, context):
+        obj = context.object
+        if not is_shape_keyable(obj): return False
+        shape_keys = obj.data.shape_keys.key_blocks
+        active_shape_key = shape_keys[obj.active_shape_key_index]
+        for ska in obj.ska_keys:
+            if ska.name == active_shape_key.name: return False
+        return True
+
+    def execute(self, context):
+        obj = context.object
+
+        shape_keys = obj.data.shape_keys.key_blocks
+        active_shape_key = shape_keys[obj.active_shape_key_index]
+
+        ska = obj.ska_keys.add()
+        ska.ska_name = active_shape_key.name
+
+        return {'FINISHED'}
+
 class DUSKA_OT_add_key( bpy.types.Operator ):
     bl_idname = "object.ska_add_key"
-    bl_label = "Add Key"
-    bl_description = "Adds a new Shape Key to be used in the animation"
+    bl_label = "New Animated Key"
+    bl_description = "Creates a new Shape Key which will be used in the animation"
     bl_options = {'REGISTER','UNDO'}
 
     from_mix: bpy.props.BoolProperty(default=False)
@@ -186,7 +247,8 @@ class DUSKA_OT_add_key( bpy.types.Operator ):
         sk = obj.shape_key_add(name='SKA.Key', from_mix=self.from_mix)
         ska = obj.ska_keys.add()
         ska.ska_name = sk.name
-        num_keys = len(obj.data.shape_keys.key_blocks)
+        shape_keys = obj.data.shape_keys.key_blocks
+        num_keys = len(shape_keys)
         if num_keys == 1: # if it's the first, it's the basis
             sk.name = 'Basis'
             ska.ska_name = sk.name
@@ -194,8 +256,17 @@ class DUSKA_OT_add_key( bpy.types.Operator ):
             ska = obj.ska_keys.add()
             ska.ska_name = sk.name
         else: # let's check if the basis is there, if not add it
-            pass
-        i = len(obj.data.shape_keys.key_blocks)-1
+            create_basis = True
+            basis_name = shape_keys[0].name
+            for ska_key in obj.ska_keys:
+                if ska_key.name == basis_name:
+                    create_basis = False
+                    break
+            if create_basis:
+                ska_basis = obj.ska_keys.add()
+                ska_basis.ska_name = basis_name
+
+        i = len(shape_keys)-1
         obj.active_shape_key_index = i
         obj.ska_active_index = i
 
@@ -215,6 +286,8 @@ class DUSKA_OT_remove_key(bpy.types.Operator ):
     bl_description = "Removes a new Shape Key to be used in the animation"
     bl_options = {'REGISTER','UNDO'}
 
+    delete: bpy.props.BoolProperty(default=False)
+
     @classmethod
     def poll(cls, context):
         obj = context.object
@@ -231,13 +304,14 @@ class DUSKA_OT_remove_key(bpy.types.Operator ):
         # and adjust values of other keyframes to continue referencing the right skas
         dublf_animation.remove_animated_index(obj, 'ska_active_index', obj.ska_active_index)
 
-        shape_key = get_shape_key(obj, obj.ska_keys[obj.ska_active_index])
-        if shape_key is not None:
-            obj.shape_key_remove( shape_key )
+        if self.delete:
+            shape_key = get_shape_key(obj, obj.ska_keys[obj.ska_active_index])
+            if shape_key is not None:
+                obj.shape_key_remove( shape_key )
         obj.ska_keys.remove( obj.ska_active_index )
         return {'FINISHED'}
 
-class DUIK_OT_move_ska( bpy.types.Operator ):
+class DUSKA_OT_move_ska( bpy.types.Operator ):
     bl_idname = "object.ska_move_key"
     bl_label = "Move Key"
     bl_description = "Moves a Shape Key in the list"
@@ -274,13 +348,33 @@ class DUIK_OT_move_ska( bpy.types.Operator ):
 
         return {'FINISHED'}
 
+class DUSKA_MT_menu( bpy.types.Menu ):
+    bl_label = 'SKA'
+    bl_idname = 'DUSKA_MT_menu'
+
+    def draw(self, context):
+        layout = self.layout
+        layout.operator("object.ska_add_key", icon='ADD', text="New Animated Key").from_mix = False
+        layout.operator("object.ska_add_key", icon='ADD', text="New Animated Key from mix").from_mix = True
+        layout.separator()
+        layout.operator("object.ska_include_key", icon='ADD', text="Add active Shape Key to animation")
+        layout.separator()
+        layout.operator("object.ska_remove_key", icon='REMOVE', text="Remove Animated Key from animation").delete = False
+        layout.operator("object.ska_remove_key", icon='X', text="Delete Shape Key").delete = True
+
 class DUSKA_UL_keys( bpy.types.UIList ):
     """The list of shape keys on an object"""
     bl_idname = "DUSKA_UL_keys"
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
-        if has_corresponding_key(item, data): layout.prop(item, 'name', text='', emboss=False, icon='SHAPEKEY_DATA')
-        else: layout.prop(item, 'name', text='', emboss=False, icon='ERROR')
+        if has_corresponding_key(item, data):
+            obj = context.object
+            i = 'SHAPEKEY_DATA'
+            if obj.data.shape_keys.key_blocks[0].name == item.name:
+                i = 'MESH_DATA'
+            layout.prop(item, 'name', text='', emboss=False, icon=i)
+        else:
+            layout.prop(item, 'name', text='', emboss=False, icon='ERROR')
 
 class DUSKA_PT_keys_control( bpy.types.Panel ):
     bl_space_type = 'VIEW_3D'
@@ -304,18 +398,23 @@ class DUSKA_PT_keys_control( bpy.types.Panel ):
             row = layout.row()
             row.template_list("DUSKA_UL_keys", "", obj , "ska_keys", obj , "ska_active_index" , rows = 3 )
             col = row.column(align=True)
-            col.operator("object.ska_add_key", icon='ADD', text="").from_mix = False
-            col.operator("object.ska_add_key", icon='PLUS', text="").from_mix = True
-            col.operator("object.ska_remove_key", icon='REMOVE', text="")
+            col.operator("object.ska_add_key", icon='ADD', text="").from_mix = True
+            col.operator("object.ska_edit_key", icon='EDITMODE_HLT', text="").sculpt = False
+            col.operator("object.ska_edit_key", icon='SCULPTMODE_HLT', text="").sculpt = True
+            col.separator()
+            col.menu("DUSKA_MT_menu", icon='DOWNARROW_HLT', text="")
             col.separator()
             col.operator('object.ska_move_key',  icon='TRIA_UP', text="").up = True
             col.operator('object.ska_move_key',  icon='TRIA_DOWN', text="").up = False
         
 classes = (
     DUSKA_key,
+    DUSKA_OT_edit,
+    DUSKA_OT_include_key,
     DUSKA_OT_add_key,
     DUSKA_OT_remove_key,
-    DUIK_OT_move_ska,
+    DUSKA_OT_move_ska,
+    DUSKA_MT_menu,
     DUSKA_UL_keys,
     DUSKA_PT_keys_control,
 )
