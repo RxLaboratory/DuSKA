@@ -45,6 +45,12 @@ This list of *Shape Keys* can be animated, as any other property; you can also a
 
 When the keyframes are set to *Constant* interpolation, there will be no transition between keys, which is better for *claymation*. When set to *Linear* interpolation (the default), *DuSKA* will interpolate between keys, which may be better for corrective *Shape Keys*.
 
+## Groups
+
+![](img/captures/duska-groups.png)
+
+You can add up to five *Animated Key Groups* to combine different shape keys and animations, for example to have different shape keys for the left side and the right side of a character.
+
 ## License
 
 ### Software

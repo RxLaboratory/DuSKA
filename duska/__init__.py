@@ -23,7 +23,7 @@ bl_info = {
     "blender": (2, 80, 0),
     "author": "Nicolas 'Duduf' Dufresne",
     "location": "3D View > Sidebar > Item",
-    "version": (1,1,0),
+    "version": (1,2,0),
     "description": "Eases animation using shape keys (clay animation) and corrective shape keys.",
     "wiki_url": "https://duska-docs.rainboxlab.org/",
 }
@@ -170,6 +170,7 @@ def update_ska_index(obj, context=bpy.context):
         # for lists
         for i in range(0, 5):
             current_ska = getCurrentSka(obj, i)
+            if not current_ska: continue
             addToValues(current_ska, 1)
 
     # Get the average for all skas

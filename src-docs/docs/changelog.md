@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.0
+
+### New
+
+- Added groups
+
 ## 1.1.0
 
 ### Improvements
