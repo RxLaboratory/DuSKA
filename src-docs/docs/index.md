@@ -23,7 +23,7 @@ Without this add-on, to animate *Shape Keys* in Blender, you'd have to animate a
 
 When a compatible object is selected (*Curve* or *Mesh*), you can add new Animated Shape Keys with the *Shape Keys Animation* panel.
 
-- *New Abnimated Key* adds a new Keyframe from the basis.
+- *New Animated Key* adds a new Keyframe from the basis.
 - *Edit Animated Key* activates the *Shape Key* corresponding to the current *Animated Key* and switches to *Edit mode*.
 - *Edit Animated Key* activates the *Shape Key* corresponding to the current *Animated Key* and switches to *Sculpt mode*.
 - Use the **▲ ▼** *Move Key* buttons to re-arrange the *Animated Keys* in the list.
@@ -35,8 +35,8 @@ The menu **▽** contains other useful operators.
 
 ![](img/captures/duska-popup.png)
 
-- *New Abnimated Key* adds a new Keyframe from the basis.
-- *New Abnimated Key from mix* adds a new Keyframe from the current Shape Key mix.
+- *New Animated Key* adds a new Keyframe from the basis.
+- *New Animated Key from mix* adds a new Keyframe from the current Shape Key mix.
 - *Add active Shape Key to animation* adds the active *Shape Key* to the list of animated *Shape Keys*.
 - *Remove Animated Key from animation* removes the active *Animated Key* but does not delete the corresponding *Shape Key*.
 - *Delete Shape Key* removes the active *Animated Key* and deletes the corresponding *Shape Key*.
